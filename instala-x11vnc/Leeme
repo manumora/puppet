@@ -1,0 +1,4 @@
+Instrucciones:
+
+- Hay que generar un fichero de password: x11vnc -storepasswd in /etc/x11vnc.pass
+- Copiar el fichero x11vnc.pass en la carpeta files de la tarea puppet
