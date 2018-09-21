@@ -4,6 +4,11 @@ test -e  $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml  &&  rm  $H
 
 DVI=$(xrandr | grep " connected" | grep DVI | cut -d" " -f1)
 VGA=$(xrandr | grep " connected" | grep VGA | cut -d" " -f1)
-xrandr --output $VGA --mode 1024x768 --pos 0x0 --rotate normal --output $DVI --mode 1024x768 --pos 0x0 --rotate normal --same-as $VGA
+
+if [ -z "$DVI" ]; then
+    xrandr --output $VGA --mode 1024x768 --pos 0x0 --rotate normal
+else
+    xrandr --output $VGA --mode 1024x768 --pos 0x0 --rotate normal --output $DVI --mode 1024x768 --pos 0x0 --rotate normal --same-as $VGA
+fi
 
 exit 0
