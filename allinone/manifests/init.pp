@@ -1,9 +1,9 @@
 class allinone {
-    include allinone::fichero_escuela
-    case $hardware {
-	    "aioTTL": {
-            include allinone::hostname
-            include allinone::ldap
-            include allinone::sudo
-	    }
+    if $productname == "TTL TEKNOAIO24-H510-D4" {
+        include allinone::fichero_escuela
+        include allinone::hostname
+        include allinone::ldap
+        include allinone::sudo
+        include allinone::grub
+    }
 }
