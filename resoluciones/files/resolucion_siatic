@@ -1,9 +1,0 @@
-#!/bin/sh
-
-test -e  $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml  &&  rm  $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
-
-HDMI=$(xrandr | grep " connected" | grep HDMI | cut -d" " -f1)
-VGA=$(xrandr | grep " connected" | grep VGA | cut -d" " -f1)
-xrandr --output $VGA --mode 1280x800 --pos 0x0 --rotate normal --output $HDMI --mode 1280x800 --pos 0x0 --rotate normal --same-as $VGA
-
-exit 0

@@ -5,5 +5,6 @@ class allinone {
         include allinone::ldap
         include allinone::sudo
         include allinone::grub
+        include allinone::varios
     }
 }

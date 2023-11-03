@@ -14,8 +14,8 @@ class allinone::grub {
      }
 
      exec {"regenera-grub":
-            command => "/usr/sbin/update-grub2",
-            subscribe => [File["/etc/grub.d/30_os-prober"],File["/etc/grub.d/30_uefi-firmware"]],
-            refreshonly => true
+          command => "/usr/sbin/update-grub2",
+          subscribe => [File["/etc/grub.d/30_os-prober"], File["/etc/grub.d/30_uefi-firmware"]],
+          refreshonly => true
      }
 }

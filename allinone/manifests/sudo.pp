@@ -1,6 +1,9 @@
+include "utils/replaceLine"
+
 class allinone::sudo {
-    # Remove user linex from sudo
-    exec { "/bin/sed -i 's/sudo:x:27:linex/sudo:x:27:/g' /etc/hosts":
-       onlyif => "/bin/grep -q /etc/hosts 'sudo:x:27:linex'",
+    replaceLine{"remove-linex-from-groups":
+        file => "/etc/groups",
+        pattern => "sudo:x:27:linex",
+        replacement => "sudo:x:27:"
     }
 }
