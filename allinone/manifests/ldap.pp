@@ -1,5 +1,3 @@
-include "utils/setConfiguration"
-
 class allinone::ldap {
     file {"/etc/ldap/ssl/ldap-server-pubkey.pem":
         source => "puppet:///modules/allinone/ldap-server-pubkey.pem",
@@ -20,12 +18,12 @@ class allinone::ldap {
         mode => 644
     }
 
-    setConfiguration {"set-cache-credentials":
+    setConfigurationAIO {"set-cache-credentials":
         file => "/etc/sssd/sssd.conf",
         line => "cache_credentials=false"
     }
 
-    setConfiguration{"set-tls-reqcert":
+    setConfigurationAIO{"set-tls-reqcert":
         file => "/etc/sssd/sssd.conf",
         line => "ldap_tls_reqcert=never"
     }

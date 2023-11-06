@@ -22,108 +22,71 @@
 ##############################################################################
 
 import ldap
-import fcntl, socket, struct
 import os
+import fcntl, socket, struct
+import json
+from ldap3 import Server, Connection, ALL, SUBTREE
+
 
 class LdapConnection(object):
-    def __init__(self,host,username,password):
-		self.host = host
-		self.username = username
-		self.password = password
+  def __init__(self, host, username="", password=""):
+    self.host = host
+    self.username = username
+    self.password = password
 
-    def connectauth(self):
-    	self.connectauth = ldap.open (self.host)
-    	try:
-	        self.protocol_version = ldap.VERSION3
-	        self.connectauth.simple_bind_s(self.username, self.password)
-    	except ldap.CONFIDENTIALITY_REQUIRED:
-    		try:
-                	self.connectauth=ldap.initialize("ldaps://" +self.host)
-                	self.connectauth.simple_bind_s(self.username,self.password)
-                	return True
-            	except ldap.LDAPError,e:
-    			print e
-                	return False
-		return True
+  def connectauth(self):
+    server = Server(self.host, get_info=ALL)
+    self.connectauth = Connection(server, "", "")
+    self.connectauth.bind()
+    return True
 
-    def connectanonim(self):
-    	self.connectanonim = ldap.open (self.host)
-    	try:
-	        self.protocol_version = ldap.VERSION3
-	        self.connectanonim.simple_bind_s()
-    	except ldap.CONFIDENTIALITY_REQUIRED:
-    		try:
-                	self.connectanonim=ldap.initialize("ldaps://" +self.host)
-                	self.connectanonim.simple_bind_s()
-                	return True
-            	except ldap.LDAPError,e:
-    			print e
-                	return False
-		return True
-
-    def search(self,baseDN,filter,retrieveAttributes):
-		try:
-			ldap_result_id = self.connectauth.search(baseDN+",dc=instituto,dc=extremadura,dc=es", ldap.SCOPE_SUBTREE, filter, retrieveAttributes)
-			result_set = []
-			while 1:
-				result_type, result_data = self.connectauth.result(ldap_result_id, 0)
-				if (result_data == []):
-					break
-				else:
-					if result_type == ldap.RES_SEARCH_ENTRY:
-						result_set.append(result_data)
-			return result_set
-		except ldap.LDAPError, e:
-			print e
-
+  def search(self, baseDN, filter, retrieveAttributes):
+    self.connectauth.search(baseDN + ",dc=instituto,dc=extremadura,dc=es", filter, SUBTREE, attributes=retrieveAttributes)
+    for entry in self.connectauth.entries:
+      return json.loads(entry.entry_to_json())["attributes"]["cn"][0]
 
 def getHwAddr(ifname):
-	s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', ifname[:15]))
-	return ''.join(['%02x:' % ord(char) for char in info[18:24]])[:-1]
-
+  s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+  info = fcntl.ioctl(s.fileno(), 0x8927,  struct.pack('256s', bytes(ifname, 'utf-8')[:15]))
+  return ':'.join('%02x' % b for b in info[18:24])
 
 def main():
-	response = os.system("ping -c 1 ldap")
-	if response != 0:
-		exit()
+  response = os.system("ping -c 1 ldap")
+  if response != 0:
+    exit()
 
-	mac = getHwAddr('eth0')
-	hostname = socket.gethostname()
+  mac = getHwAddr('eno1')
+  hostname = socket.gethostname()
 
-	l = LdapConnection("ldap", "", "")
-	l.connectauth()
-	search  = l.search("cn=DHCP Config","(dhcpHWAddress=ethernet " + mac + ")",["cn","uniqueIdentifier"])
-	if len(search) == 0:
-		print("MAC not found in LDAP")
-		exit()
+  l = LdapConnection("ldap")
+  l.connectauth()
+  ldap_hostname  = l.search("cn=DHCP Config", "(dhcpHWAddress=ethernet " + mac + ")", ["cn", "uniqueIdentifier"])
+  if ldap_hostname is None:
+    print("MAC not found in LDAP")
+    exit()
 
-	try:
-		ldap_hostname = search[0][0][1]['cn'][0]
-	except:
-		ldap_hostname = ""
+  if hostname != ldap_hostname:
+    f = open("/etc/hostname","w")
+    f.write(ldap_hostname)
+    f.close()
 
-	if hostname != ldap_hostname:
-		f = open("/etc/hostname","w")
-		f.write(ldap_hostname)
-		f.close()
+    f = open("/proc/sys/kernel/hostname","w")
+    f.write(ldap_hostname)
+    f.close()
 
-		f = open("/proc/sys/kernel/hostname","w")
-		f.write(ldap_hostname)
-		f.close()
+    f = open("/etc/hosts","w")
+    f.write("127.0.0.1	localhost\n")
+    f.write("127.0.1.1	"+ldap_hostname+"\n\n")
+    f.write("# The following lines are desirable for IPv6 capable hosts\n")
+    f.write("::1	localhost ip6-localhost ip6-loopback\n")
+    f.write("fe00::0 ip6-localnet\n")
+    f.write("ff00::0 ip6-mcastprefix\n")
+    f.write("ff02::1 ip6-allnodes\n")
+    f.write("ff02::2 ip6-allrouters")
+    f.close()
 
-		f = open("/etc/hosts","w")
-		f.write("127.0.0.1	localhost\n")
-		f.write("127.0.1.1	"+ldap_hostname+"\n\n")
-		f.write("# The following lines are desirable for IPv6 capable hosts\n")
-		f.write("::1	localhost ip6-localhost ip6-loopback\n")
-		f.write("fe00::0 ip6-localnet\n")
-		f.write("ff00::0 ip6-mcastprefix\n")
-		f.write("ff02::1 ip6-allnodes\n")
-		f.write("ff02::2 ip6-allrouters")
-		f.close()
-
-		os.system("hostname -F /etc/hostname")
+    os.system("hostname -F /etc/hostname")
 
 if __name__ == '__main__':
-	main()
+  main()
+

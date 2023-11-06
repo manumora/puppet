@@ -1,8 +1,6 @@
-include "utils/setConfiguration"
-
 class allinone::varios {
     # Remove ubuntu upgrades messages
-    setConfiguration{"remove-ubuntu-upgrades-messages":
+    setConfigurationAIO{"remove-ubuntu-upgrades-messages":
         file => "/etc/update-manager/release-upgrades",
         line => "Prompt=never"
     }

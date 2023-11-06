@@ -1,4 +1,4 @@
-define setConfiguration($file, $line) {
+define setConfigurationAIO($file, $line) {
    $defvar = split($line, '=')
    $var = $defvar[0]
    $value = $defvar[1]
@@ -13,7 +13,7 @@ define setConfiguration($file, $line) {
    }
 }
 
-define replaceLine($file, $pattern, $replacement) {
+define replaceLineAIO($file, $pattern, $replacement) {
    exec { "/bin/sed -i 's/'${pattern}'/'{$replacement}'/g' '${file}'":
       onlyif => "/bin/grep -q '${pattern}' '${file}'",
    }

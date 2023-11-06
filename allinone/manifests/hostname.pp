@@ -1,5 +1,5 @@
 class allinone::hostname {
-    package{"python-ldap":
+    package{"python3-ldap":
         ensure => "installed"
     }
 
@@ -7,11 +7,11 @@ class allinone::hostname {
         source => "puppet:///modules/allinone/autorename.py",
         owner => root,
         group => root,
-        mode => 644
-        require => Package["python-ldap"]
+        mode => 644,
+        require => Package["python3-ldap"]
     }
 
-    exec { "/usr/bin/python /tmp/autorename.py":
+    exec { "/usr/bin/python3 /tmp/autorename.py":
         require => File["/tmp/autorename.py"]
     }
 }
