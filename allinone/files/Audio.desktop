@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon[zh_CN]=
+Exec=/usr/bin/audio_aio
+Name[zh_CN]=Audio AIO
+Name=Audio AIO
+Icon=/usr/share/icons/gmusicbrowser.png 
+

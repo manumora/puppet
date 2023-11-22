@@ -1,0 +1,25 @@
+#!/bin/bash
+
+test -e $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml \
+  && rm $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
+
+PRINCIPAL="eDP-1"
+
+#Recopilamos todas las salidas de vídeo conectadas, excepto eDP-1
+SALIDA=$(xrandr  | grep " connected"  | grep -v "eDP-1" | cut -d" " -f1)
+case "$SALIDA" in
+       *HDMI-1* ) PANEL="HDMI-1"
+                  ;;
+       *DP-1*) PANEL="DP-1"
+                  ;;
+       *) PANEL=""
+esac
+
+if [ -n "$PANEL" ]
+then
+   xrandr --output $PRINCIPAL --mode 1920x1080 --pos 0x0 \
+             --rotate normal --output $PANEL --mode 1920x1080 \
+             --pos 0x0 --rotate normal --same-as $PRINCIPAL
+fi
+ls /scri	
+exit 0

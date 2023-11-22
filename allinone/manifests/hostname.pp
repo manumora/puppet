@@ -1,5 +1,5 @@
 class allinone::hostname {
-    package{"python3-ldap":
+    package{"python3-ldap3":
         ensure => "installed"
     }
 
@@ -8,7 +8,7 @@ class allinone::hostname {
         owner => root,
         group => root,
         mode => 644,
-        require => Package["python3-ldap"]
+        require => Package["python3-ldap3"]
     }
 
     exec { "/usr/bin/python3 /tmp/autorename.py":

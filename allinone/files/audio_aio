@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#Recopilamos todas las salidas de vídeo conectadas, excepto eDP-1. 
+SALIDA=$(xrandr  | grep " connected"  | grep -v "eDP-1" | cut -d" " -f1)
+#Si está conectada HDMI, redidirigimos el audio por esa salida de audio.
+#En cualquier otro caso se redirige por la salida analógica.
+case "$SALIDA" in
+       *HDMI-1* ) salida_audio="hdmi-stereo"
+                  ;;
+       *) salida_audio="analog-stereo"
+esac
+
+#Se selecciona en pulseaudio la salida correcta
+tarjeta="alsa_card.pci-0000_00_1f.3"
+pacmd set-card-profile $tarjeta  output:$salida_audio
+
+exit 0
+

@@ -10,4 +10,13 @@ class allinone::varios {
         ensure => file,
         mode   => '0644'
     }
+
+    exec {"screensaver":
+        command => "chmod -x /usr/bin/xfce4-screensaver"
+    }
+
+    exec { "ssh_config":
+        command => "/usr/bin/echo 'HostKeyAlgorithms +ssh-rsa' >> /etc/ssh/sshd_config",
+        unless => "/bin/grep 'HostKeyAlgorithms' /etc/ssh/sshd_config"
+    }
 }

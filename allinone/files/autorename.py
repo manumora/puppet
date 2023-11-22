@@ -21,7 +21,7 @@
 #
 ##############################################################################
 
-import ldap
+import ldap3
 import os
 import fcntl, socket, struct
 import json
