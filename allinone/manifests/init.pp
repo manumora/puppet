@@ -31,9 +31,8 @@ class allinone {
         include allinone::grub
         include allinone::varios
         include allinone::autofs
-        include allinone::audio_hdmi
         include allinone::boton_cerrar_sesion
         include allinone::apagado
-        include allinone::resolucion_hdmi
+        include allinone::hdmi
     }
 }

@@ -1,0 +1,1 @@
+KERNEL=="card0" ACTION=="change", SUBSYSTEM=="drm", ENV{DISPLAY}=":0", RUN+="/bin/bash /usr/bin/hdmi_aio"

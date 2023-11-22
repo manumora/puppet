@@ -20,7 +20,8 @@
 #
 ##############################################################################
 
-class allinone::resolucion_hdmi {
+class allinone::hdmi {
+     # HDMI resolution problem
      file  {"/etc/xdg/autostart/Resolucion.desktop":
           owner => root,
           group => root,
@@ -42,5 +43,33 @@ class allinone::resolucion_hdmi {
           source => "puppet:///modules/allinone/10-resolucion.conf"
      }
 
+     # HDMI audio problem
+     file  {"/etc/xdg/autostart/Audio.desktop":
+          owner => root,
+          group => root,
+          mode => 0655,
+          source => "puppet:///modules/allinone/Audio.desktop"
+     }
 
+     file  {"/usr/bin/audio_aio":
+          owner => root,
+          group => root,
+          mode => 0655,
+          source => "puppet:///modules/allinone/audio_aio"
+     }
+
+     # Login problem
+     file  {"/usr/bin/hdmi_aio":
+          owner => root,
+          group => root,
+          mode => 0755,
+          source => "puppet:///modules/allinone/hdmi_aio"
+     }
+
+     file  {"/etc/udev/rules.d/95-hdmi-plug.rules":
+          owner => root,
+          group => root,
+          mode => 0755,
+          source => "puppet:///modules/allinone/95-hdmi-plug.rules"
+     }
 }
