@@ -27,7 +27,7 @@ class allinone {
         include allinone::fichero_escuela
         include allinone::hostname
         include allinone::ldap
-        include allinone::sudo
+        include allinone::users
         include allinone::grub
         include allinone::varios
         include allinone::autofs
