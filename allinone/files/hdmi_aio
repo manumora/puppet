@@ -3,7 +3,7 @@
 set -e
 
 HDMI_STATUS=$(</sys/class/drm/card0/card0-HDMI-A-1/status )
-USER=$(w| grep xfce4-session | cut -d' ' -f1)
+USER=$(who | grep tty7 | cut -d' ' -f1)
 
 if [ "connected" == "$HDMI_STATUS" ]; then
     su $USER -c "/usr/bin/resolucion_aio"
