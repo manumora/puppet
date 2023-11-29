@@ -3,10 +3,15 @@
 set -e
 
 HDMI_STATUS=$(</sys/class/drm/card0/card0-HDMI-A-1/status )
+VGA_STATUS=$(</sys/class/drm/card0/card0-DP-1/status )
 USER=$(who | grep tty7 | cut -d' ' -f1)
 
-if [ "connected" == "$HDMI_STATUS" ]; then
+#Si está conectada una de las dos salidas externas
+if [ "connected" == "$HDMI_STATUS" -o  "connected" == "$VGA_STATUS" ]
+then
     su $USER -c "/usr/bin/resolucion_aio"
     su $USER -c "/usr/bin/audio_aio"
 fi
+
+exit 0
 
