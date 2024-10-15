@@ -30,7 +30,7 @@ class allinone::autofs {
         source => "puppet:///modules/allinone/override.conf",
         owner => root,
         group => root,
-        mode => 644
+        mode => '644'
     }
 
     exec {"Reboot autofs":

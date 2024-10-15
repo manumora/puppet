@@ -2,8 +2,8 @@
 
 set -e
 
-HDMI_STATUS=$(</sys/class/drm/card0/card0-HDMI-A-1/status )
-VGA_STATUS=$(</sys/class/drm/card0/card0-DP-1/status )
+HDMI_STATUS=$(</sys/class/drm/card1/card1-HDMI-A-1/status )
+VGA_STATUS=$(</sys/class/drm/card1/card1-DP-1/status )
 USER=$(who | grep tty7 | cut -d' ' -f1)
 
 #Si está conectada una de las dos salidas externas

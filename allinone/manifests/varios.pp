@@ -22,7 +22,7 @@
 
 class allinone::varios {
     # Remove ubuntu upgrades messages
-    setConfigurationAIO{"remove-ubuntu-upgrades-messages":
+    allinone::set_configuration{"remove-ubuntu-upgrades-messages":
         file => "/etc/update-manager/release-upgrades",
         line => "Prompt=never"
     }
@@ -41,4 +41,8 @@ class allinone::varios {
         command => "/usr/bin/echo 'HostKeyAlgorithms +ssh-rsa' >> /etc/ssh/sshd_config",
         unless => "/bin/grep 'HostKeyAlgorithms' /etc/ssh/sshd_config"
     }
+
+   package { 'openboard':
+     ensure => 'latest',
+   }
 }

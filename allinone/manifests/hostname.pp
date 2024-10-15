@@ -29,7 +29,7 @@ class allinone::hostname {
         source => "puppet:///modules/allinone/autorename.py",
         owner => root,
         group => root,
-        mode => 644,
+        mode => '644',
         require => Package["python3-ldap3"]
     }
 

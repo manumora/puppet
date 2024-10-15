@@ -20,7 +20,7 @@
 #
 ##############################################################################
 
-define setConfigurationAIO($file, $line) {
+define allinone::set_configuration($file, $line) {
    $defvar = split($line, '=')
    $var = $defvar[0]
    $value = $defvar[1]
@@ -32,11 +32,5 @@ define setConfigurationAIO($file, $line) {
 
    exec { "/bin/echo '${line}' >> '${file}'":
       unless => "/bin/grep -q '${var}' '${file}'"
-   }
-}
-
-define replaceLineAIO($file, $pattern, $replacement) {
-   exec { "/bin/sed -i 's/'${pattern}'/'{$replacement}'/g' '${file}'":
-      onlyif => "/bin/grep -q '${pattern}' '${file}'",
    }
 }

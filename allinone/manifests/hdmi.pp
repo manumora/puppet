@@ -25,21 +25,21 @@ class allinone::hdmi {
      file  {"/etc/xdg/autostart/Resolucion.desktop":
           owner => root,
           group => root,
-          mode => 0755,
+          mode => '0755',
           source => "puppet:///modules/allinone/Resolucion.desktop"
      }
 
      file  {"/usr/bin/resolucion_aio":
           owner => root,
           group => root,
-          mode => 0755,
+          mode => '0755',
           source => "puppet:///modules/allinone/resolucion_aio"
      }
 
      file  {"/etc/lightdm/lightdm.conf.d/10-resolucion.conf":
           owner => root,
           group => root,
-          mode => 0755,
+          mode => '0755',
           source => "puppet:///modules/allinone/10-resolucion.conf"
      }
 
@@ -47,14 +47,14 @@ class allinone::hdmi {
      file  {"/etc/xdg/autostart/Audio.desktop":
           owner => root,
           group => root,
-          mode => 0655,
+          mode => '0655',
           source => "puppet:///modules/allinone/Audio.desktop"
      }
 
      file  {"/usr/bin/audio_aio":
           owner => root,
           group => root,
-          mode => 0655,
+          mode => '0655',
           source => "puppet:///modules/allinone/audio_aio"
      }
 
@@ -62,14 +62,14 @@ class allinone::hdmi {
      file  {"/usr/bin/hdmi_aio":
           owner => root,
           group => root,
-          mode => 0755,
+          mode => '0755',
           source => "puppet:///modules/allinone/hdmi_aio"
      }
 
      file  {"/etc/udev/rules.d/95-hdmi-plug.rules":
           owner => root,
           group => root,
-          mode => 0755,
+          mode => '0755',
           source => "puppet:///modules/allinone/95-hdmi-plug.rules"
      }
 }

@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-import "utils.pp"
 
 class allinone {
     if $productname == "TTL TEKNOAIO24-H510-D4" {
@@ -30,7 +29,7 @@ class allinone {
         include allinone::users
         include allinone::grub
         include allinone::varios
-        include allinone::autofs
+        #include allinone::autofs
         include allinone::boton_cerrar_sesion
         include allinone::apagado
         include allinone::hdmi

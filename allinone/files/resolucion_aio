@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sleep 3
+
 test -e $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml \
   && rm $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
 
@@ -21,5 +23,4 @@ then
              --rotate normal --output $PANEL --mode 1920x1080 \
              --pos 0x0 --rotate normal --same-as $PRINCIPAL
 fi
-ls /scri	
 exit 0
