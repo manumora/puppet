@@ -1,0 +1,20 @@
+#!/bin/bash
+
+sleep 3
+
+test -e $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml && rm $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
+
+# Caso especial para el siatic-infolab tecnologia
+if [ "$HOSTNAME" == "a20-sia" ]; then
+   PRINCIPAL="DP-3"
+   SECUNDARIA="DP-1-4"
+else
+   PRINCIPAL=$(xrandr  | grep " connected"  | grep -v "disconnected" | grep "VGA" | cut -d" " -f1)
+   SECUNDARIA=$(xrandr  | grep " connected"  | grep -v "disconnected" | grep "HDMI" | cut -d" " -f1)
+fi
+
+if [ -n "$PRINCIPAL" ] && [ -n "$SECUNDARIA" ]; then
+   xrandr --output $PRINCIPAL --mode 1920x1080 --pos 0x0 --rotate normal --output $SECUNDARIA --mode 1920x1080 --pos 0x0 --rotate normal --same-as $PRINCIPAL
+fi
+
+exit 0

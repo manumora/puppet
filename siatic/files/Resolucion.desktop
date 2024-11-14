@@ -1,0 +1,12 @@
+#!/usr/bin/env xdg-open
+
+[Desktop Entry]
+Version=1.0
+Type=Application
+Terminal=false
+Icon[zh_CN]=
+Exec=/usr/bin/resolucion_siatic
+Name[zh_CN]=Resolucion SIATIC
+Name=Resolucion SIATIC
+Icon=/usr/share/icons/gmusicbrowser.png 
+
