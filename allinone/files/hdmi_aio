@@ -1,16 +1,20 @@
 #!/bin/bash
 
-set -e
+set -eu
 
 HDMI_STATUS=$(</sys/class/drm/card[01]/card[01]-HDMI-A-1/status)
 VGA_STATUS=$(</sys/class/drm/card[01]/card[01]-DP-1/status)
-USER=$(who | grep tty7 | cut -d' ' -f1)
+SESSION_USER=$(who | awk '$2 == "tty7" { print $1; exit }')
+
+# Sin sesión gráfica en tty7 no hay nada que ajustar, y sobre todo
+# nunca hay que caer en "su" sin usuario, que equivale a su a root
+[ -n "$SESSION_USER" ] || exit 0
 
 #Si está conectada una de las dos salidas externas
 if [ "connected" == "$HDMI_STATUS" -o  "connected" == "$VGA_STATUS" ]
 then
-    su $USER -c "/usr/bin/resolucion_aio"
-    su $USER -c "/usr/bin/audio_aio"
+    su "$SESSION_USER" -c "/usr/bin/resolucion_aio"
+    su "$SESSION_USER" -c "/usr/bin/audio_aio"
 fi
 
 exit 0
