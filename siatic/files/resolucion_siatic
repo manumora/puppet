@@ -6,14 +6,8 @@ test -e $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml && rm $HOME/
 
 RESOLUTION="1920x1080"
 
-# Caso especial para el siatic-infolab tecnologia
-if [ "$HOSTNAME" == "a20-sia" ]; then
-   MAIN="DP-3"
-   SECONDARY="DP-1-4"
-else
-   MAIN=$(xrandr  | grep " connected"  | grep -v "disconnected" | grep "VGA" | cut -d" " -f1)
-   SECONDARY=$(xrandr  | grep " connected"  | grep -v "disconnected" | grep "HDMI" | cut -d" " -f1)
-fi
+MAIN=$(xrandr  | grep " connected"  | grep -v "disconnected" | grep "VGA" | cut -d" " -f1)
+SECONDARY=$(xrandr  | grep " connected"  | grep -v "disconnected" | grep "HDMI" | cut -d" " -f1)
 
 if ! xrandr | grep "$MAIN" | grep -q "$RESOLUTION"; then
    xrandr --addmode $MAIN "$RESOLUTION"
