@@ -1,20 +1,31 @@
 #!/bin/bash
-
-sleep 3
-
-test -e $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml && rm $HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml
-
 RESOLUTION="1920x1080"
 
-MAIN=$(xrandr  | grep " connected"  | grep -v "disconnected" | grep "VGA" | cut -d" " -f1)
-SECONDARY=$(xrandr  | grep " connected"  | grep -v "disconnected" | grep "HDMI" | cut -d" " -f1)
-
-if ! xrandr | grep "$MAIN" | grep -q "$RESOLUTION"; then
-   xrandr --addmode $MAIN "$RESOLUTION"
+# Solo en la sesión de usuario: evitar que xfsettingsd reaplique su config
+if [ "$(id -u)" -ne 0 ]; then
+   sleep 3
+   rm -f "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/displays.xml"
 fi
 
-if [ -n "$MAIN" ] && [ -n "$SECONDARY" ]; then
-   xrandr --output $MAIN --mode $RESOLUTION --pos 0x0 --rotate normal --output $SECONDARY --mode $RESOLUTION --pos 0x0 --rotate normal --same-as $MAIN
-fi
+connected() { xrandr | awk -v p="^$1" '$2=="connected" && $1 ~ p {print $1; exit}'; }
 
+MAIN=$(connected VGA)
+SECONDARY=$(connected HDMI)
+
+[ -z "$MAIN" ] && MAIN="$SECONDARY" && SECONDARY=""
+[ -z "$MAIN" ] && exit 0
+
+# Crear el modo si el servidor X no lo conoce, y añadirlo a la salida si no lo tiene
+if ! xrandr | grep -qw "$RESOLUTION"; then
+   xrandr --newmode "$RESOLUTION" $(cvt 1920 1080 60 | awk '/Modeline/{for(i=3;i<=NF;i++) printf "%s ", $i}')
+fi
+xrandr | awk -v o="$MAIN" '$1==o{f=1;next} /^[^ ]/{f=0} f{print $1}' | grep -qx "$RESOLUTION" \
+   || xrandr --addmode "$MAIN" "$RESOLUTION"
+
+if [ -n "$SECONDARY" ]; then
+   xrandr --output "$MAIN" --primary --mode "$RESOLUTION" --pos 0x0 \
+          --output "$SECONDARY" --mode "$RESOLUTION" --same-as "$MAIN"
+else
+   xrandr --output "$MAIN" --primary --mode "$RESOLUTION"
+fi
 exit 0
